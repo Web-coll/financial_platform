@@ -1,6 +1,18 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import {
+  InsertUser,
+  users,
+  financialProfiles,
+  budgetAllocations,
+  financialPlans,
+  investmentGoals,
+  chatConversations,
+  InsertFinancialProfile,
+  InsertBudgetAllocation,
+  InsertFinancialPlan,
+  InsertInvestmentGoal,
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +101,174 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Financial profile queries
+export async function getOrCreateFinancialProfile(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const existing = await db
+    .select()
+    .from(financialProfiles)
+    .where(eq(financialProfiles.userId, userId))
+    .limit(1);
+
+  if (existing.length > 0) {
+    return existing[0];
+  }
+
+  // Return undefined if no profile exists (user hasn't completed onboarding)
+  return undefined;
+}
+
+export async function createFinancialProfile(
+  userId: number,
+  data: Omit<InsertFinancialProfile, 'userId'>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(financialProfiles).values({
+    ...data,
+    userId,
+  });
+
+  return result;
+}
+
+export async function updateFinancialProfile(
+  userId: number,
+  data: Partial<Omit<InsertFinancialProfile, 'userId'>>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .update(financialProfiles)
+    .set(data)
+    .where(eq(financialProfiles.userId, userId));
+}
+
+// Budget allocation queries
+export async function getOrCreateBudgetAllocation(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const existing = await db
+    .select()
+    .from(budgetAllocations)
+    .where(eq(budgetAllocations.userId, userId))
+    .limit(1);
+
+  if (existing.length > 0) {
+    return existing[0];
+  }
+
+  return undefined;
+}
+
+export async function createBudgetAllocation(
+  userId: number,
+  data: Omit<InsertBudgetAllocation, 'userId'>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(budgetAllocations).values({
+    ...data,
+    userId,
+  });
+
+  return result;
+}
+
+// Financial plan queries
+export async function getLatestFinancialPlan(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db
+    .select()
+    .from(financialPlans)
+    .where(eq(financialPlans.userId, userId))
+    .orderBy((t) => t.createdAt)
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createFinancialPlan(
+  userId: number,
+  data: Omit<InsertFinancialPlan, 'userId'>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(financialPlans).values({
+    ...data,
+    userId,
+  });
+
+  return result;
+}
+
+// Investment goals queries
+export async function getInvestmentGoals(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db
+    .select()
+    .from(investmentGoals)
+    .where(eq(investmentGoals.userId, userId));
+}
+
+export async function createInvestmentGoal(
+  userId: number,
+  data: Omit<InsertInvestmentGoal, 'userId'>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(investmentGoals).values({
+    ...data,
+    userId,
+  });
+
+  return result;
+}
+
+// Chat conversation queries
+export async function getChatConversation(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db
+    .select()
+    .from(chatConversations)
+    .where(eq(chatConversations.userId, userId))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createOrUpdateChatConversation(
+  userId: number,
+  messages: unknown[]
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await getChatConversation(userId);
+
+  if (existing) {
+    await db
+      .update(chatConversations)
+      .set({ messages: JSON.stringify(messages) })
+      .where(eq(chatConversations.userId, userId));
+  } else {
+    await db.insert(chatConversations).values({
+      userId,
+      messages: JSON.stringify(messages),
+    });
+  }
+}
