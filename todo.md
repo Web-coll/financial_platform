@@ -54,3 +54,5 @@
 ## Bugs Corregidos
 - [x] Botón "Generar Plan Financiero" no funcionaba - conectado a mutación correcta
 - [x] Botón "Ver Demo" no hacía nada - agregado onClick para navegar a Educación
+- [x] No permitía ingresar 0 en ahorros - corregida validación para permitir cero
+- [x] No hay opción para cambiar ingreso variable - agregada descripción dinámica y tip de ayuda

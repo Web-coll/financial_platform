@@ -73,8 +73,13 @@ export default function Onboarding() {
       return;
     }
 
-    if (data.currentSavings === undefined || data.currentSavings < 0) {
+    if (data.currentSavings === undefined || data.currentSavings === null) {
       toast.error("Por favor, ingresa tus ahorros actuales");
+      return;
+    }
+
+    if (data.currentSavings < 0) {
+      toast.error("Los ahorros no pueden ser negativos");
       return;
     }
 
@@ -112,6 +117,11 @@ export default function Onboarding() {
                 <Label htmlFor="income" className="text-white">
                   ¿Cuál es tu ingreso mensual?
                 </Label>
+                <p className="text-sm text-slate-400">
+                  {data.incomeType === "variable" 
+                    ? "Ingresa tu ingreso promedio mensual" 
+                    : "Ingresa tu sueldo mensual"}
+                </p>
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400">$</span>
                   <Input
@@ -145,6 +155,11 @@ export default function Onboarding() {
                     </Label>
                   </div>
                 </RadioGroup>
+                {data.incomeType === "variable" && (
+                  <p className="text-xs text-slate-400 mt-2">
+                    💡 Tip: Si tu ingreso es variable, usa un promedio conservador para presupuestar de forma segura.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -240,13 +255,17 @@ export default function Onboarding() {
                 <Label htmlFor="savings" className="text-white">
                   ¿Cuánto tienes ahorrado actualmente?
                 </Label>
+                <p className="text-sm text-slate-400">
+                  Si no tienes ahorros aún, puedes ingresar 0
+                </p>
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400">$</span>
                   <Input
                     id="savings"
                     type="number"
                     placeholder="0.00"
-                    value={data.currentSavings || ""}
+                    min="0"
+                    value={data.currentSavings !== undefined ? data.currentSavings : ""}
                     onChange={(e) =>
                       setData({ ...data, currentSavings: parseFloat(e.target.value) || 0 })
                     }
