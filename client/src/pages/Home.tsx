@@ -7,7 +7,17 @@ export default function Home() {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative">
+      {/* Chat IA Button - Fixed at bottom left */}
+      {isAuthenticated && (
+        <Button
+          onClick={() => (window.location.href = "/chat")}
+          className="fixed bottom-6 left-6 bg-green-600 hover:bg-green-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-40"
+          title="Chat IA"
+        >
+          <Brain className="w-6 h-6" />
+        </Button>
+      )}
       {/* Navigation */}
       <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -15,11 +25,10 @@ export default function Home() {
             <TrendingUp className="w-8 h-8 text-green-500" />
             <span className="text-xl font-bold text-white">FinPlan</span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex items-center justify-between w-full">
             {isAuthenticated ? (
               <>
-                <span className="text-slate-300 py-2">Hola, {user?.name}</span>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
                   <Button
                     onClick={() => (window.location.href = "/dashboard")}
                     variant="outline"
@@ -34,18 +43,13 @@ export default function Home() {
                   >
                     Educacion
                   </Button>
-                  <Button
-                    onClick={() => (window.location.href = "/chat")}
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    Chat IA
-                  </Button>
                 </div>
+                <span className="text-slate-300 py-2">Hola, {user?.name}</span>
               </>
             ) : (
               <Button
                 onClick={() => (window.location.href = getLoginUrl())}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-green-600 hover:bg-green-700 text-white ml-auto"
               >
                 Iniciar Sesión
               </Button>
