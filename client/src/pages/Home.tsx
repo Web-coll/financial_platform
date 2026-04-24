@@ -75,6 +75,7 @@ export default function Home() {
                   Comenzar Gratis
                 </Button>
                 <Button
+                  onClick={() => (window.location.href = "/education")}
                   variant="outline"
                   className="border-slate-600 text-slate-300 hover:bg-slate-700 px-8 py-6 text-lg"
                 >

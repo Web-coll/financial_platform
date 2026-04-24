@@ -50,3 +50,7 @@
 - [x] Realizar testing manual de flujos completos
 - [x] Crear checkpoint final
 - [x] Entregar aplicación funcional al usuario
+
+## Bugs Corregidos
+- [x] Botón "Generar Plan Financiero" no funcionaba - conectado a mutación correcta
+- [x] Botón "Ver Demo" no hacía nada - agregado onClick para navegar a Educación

@@ -18,6 +18,11 @@ export default function Dashboard() {
   const planQuery = trpc.financial.getFinancialPlan.useQuery(undefined, {
     enabled: !!user,
   });
+  const generatePlanMutation = trpc.financial.generateFinancialPlan.useMutation({
+    onSuccess: () => {
+      planQuery.refetch();
+    },
+  });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -258,10 +263,11 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() => planQuery.refetch()}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={() => generatePlanMutation.mutate()}
+                disabled={generatePlanMutation.isPending}
+                className="bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
               >
-                Generar Plan Ahora
+                {generatePlanMutation.isPending ? "Generando..." : "Generar Plan Ahora"}
               </Button>
             </CardContent>
           </Card>
