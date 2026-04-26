@@ -29,8 +29,12 @@ export default function EditProfile() {
     riskProfile: profileQuery.data?.riskProfile || "moderate" as "conservative" | "moderate" | "aggressive",
   });
 
+  const utils = trpc.useUtils();
   const updateMutation = trpc.financial.completeOnboarding.useMutation({
     onSuccess: () => {
+      utils.financial.getProfile.invalidate();
+      utils.financial.getBudget.invalidate();
+      utils.financial.getFinancialPlan.invalidate();
       toast.success("Perfil actualizado exitosamente");
       setIsSaving(false);
       setTimeout(() => {

@@ -18,8 +18,11 @@ export default function Dashboard() {
   const planQuery = trpc.financial.getFinancialPlan.useQuery(undefined, {
     enabled: !!user,
   });
+  const utils = trpc.useUtils();
   const generatePlanMutation = trpc.financial.generateFinancialPlan.useMutation({
     onSuccess: () => {
+      utils.financial.getBudget.invalidate();
+      utils.financial.getFinancialPlan.invalidate();
       planQuery.refetch();
     },
   });
@@ -131,25 +134,25 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         {/* Header */}
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-white">¡Hola, {user?.name}!</h1>
-            <p className="text-slate-400">Aquí está tu resumen financiero personalizado</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">¡Hola, {user?.name}!</h1>
+            <p className="text-sm md:text-base text-slate-400">Aquí está tu resumen financiero personalizado</p>
           </div>
           <Button
             onClick={() => (window.location.href = "/edit-profile")}
             variant="outline"
-            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+            className="border-slate-600 text-slate-300 hover:bg-slate-700 w-full md:w-auto"
           >
             Editar Perfil
           </Button>
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon;
             return (
@@ -168,9 +171,9 @@ export default function Dashboard() {
           })}
         </div>
 
-        {/* Budget Allocation */}
+        {/* Charts Section */}
         {budget && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Pie Chart */}
             <Card className="bg-slate-800 border-slate-700">
               <CardHeader>
