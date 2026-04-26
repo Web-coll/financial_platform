@@ -1,11 +1,25 @@
 import { useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
-import { Loader2, TrendingUp, DollarSign, PiggyBank, Target } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import {
+  Loader2,
+  TrendingUp,
+  DollarSign,
+  PiggyBank,
+  Target,
+  Sparkles,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -19,13 +33,15 @@ export default function Dashboard() {
     enabled: !!user,
   });
   const utils = trpc.useUtils();
-  const generatePlanMutation = trpc.financial.generateFinancialPlan.useMutation({
-    onSuccess: () => {
-      utils.financial.getBudget.invalidate();
-      utils.financial.getFinancialPlan.invalidate();
-      planQuery.refetch();
-    },
-  });
+  const generatePlanMutation = trpc.financial.generateFinancialPlan.useMutation(
+    {
+      onSuccess: () => {
+        utils.financial.getBudget.invalidate();
+        utils.financial.getFinancialPlan.invalidate();
+        planQuery.refetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -35,8 +51,8 @@ export default function Dashboard() {
 
   if (authLoading || profileQuery.isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-green-500" />
+      <div className="flex min-h-screen items-center justify-center bg-neutral-950">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
       </div>
     );
   }
@@ -46,18 +62,18 @@ export default function Dashboard() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <Card className="bg-slate-800 border-slate-700 max-w-md">
+      <div className="flex min-h-screen items-center justify-center bg-neutral-950 p-4">
+        <Card className="w-full max-w-md border-white/10 bg-white/[0.04] backdrop-blur-xl">
           <CardHeader>
             <CardTitle className="text-white">Completa tu perfil</CardTitle>
-            <CardDescription className="text-slate-400">
+            <CardDescription className="text-zinc-400">
               Necesitamos que completes el onboarding para continuar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button
               onClick={() => (window.location.href = "/onboarding")}
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              className="w-full bg-emerald-500 hover:bg-emerald-400"
             >
               Ir al Onboarding
             </Button>
@@ -68,19 +84,24 @@ export default function Dashboard() {
   }
 
   const monthlyIncome = parseFloat(profile.monthlyIncome as unknown as string);
-  const currentSavings = parseFloat(profile.currentSavings as unknown as string);
+  const currentSavings = parseFloat(
+    profile.currentSavings as unknown as string
+  );
 
-  // Budget data for pie chart
   const budgetData = budget
     ? [
         {
           name: "Gastos Fijos",
-          value: parseFloat(budget.fixedExpensesPercentage as unknown as string),
-          color: "#ef4444",
+          value: parseFloat(
+            budget.fixedExpensesPercentage as unknown as string
+          ),
+          color: "#f43f5e",
         },
         {
           name: "Gastos Variables",
-          value: parseFloat(budget.variableExpensesPercentage as unknown as string),
+          value: parseFloat(
+            budget.variableExpensesPercentage as unknown as string
+          ),
           color: "#f97316",
         },
         {
@@ -98,135 +119,213 @@ export default function Dashboard() {
           value: parseFloat(budget.debtPaymentPercentage as unknown as string),
           color: "#8b5cf6",
         },
-      ].filter((item) => item.value > 0)
+      ].filter(item => item.value > 0)
     : [];
 
-  // KPI Cards
   const kpis = [
     {
       title: "Ingreso Mensual",
       value: `$${monthlyIncome.toFixed(2)}`,
       icon: DollarSign,
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
+      color: "text-emerald-400",
+      ring: "from-emerald-500/30 to-transparent",
     },
     {
       title: "Ahorros Actuales",
       value: `$${currentSavings.toFixed(2)}`,
       icon: PiggyBank,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
+      color: "text-blue-400",
+      ring: "from-blue-500/30 to-transparent",
     },
     {
       title: "Capacidad de Inversión",
-      value: budget ? `$${parseFloat(budget.investmentAmount as unknown as string).toFixed(2)}/mes` : "$0",
+      value: budget
+        ? `$${parseFloat(budget.investmentAmount as unknown as string).toFixed(2)}/mes`
+        : "$0",
       icon: TrendingUp,
-      color: "text-purple-500",
-      bgColor: "bg-purple-500/10",
+      color: "text-violet-400",
+      ring: "from-violet-500/30 to-transparent",
     },
     {
       title: "Ahorro Mensual",
-      value: budget ? `$${parseFloat(budget.savingsAmount as unknown as string).toFixed(2)}/mes` : "$0",
+      value: budget
+        ? `$${parseFloat(budget.savingsAmount as unknown as string).toFixed(2)}/mes`
+        : "$0",
       icon: Target,
-      color: "text-cyan-500",
-      bgColor: "bg-cyan-500/10",
+      color: "text-cyan-400",
+      ring: "from-cyan-500/30 to-transparent",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+    <div className="relative min-h-screen overflow-hidden bg-neutral-950 p-3 md:p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(16,185,129,0.16),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.14),transparent_30%)]" />
+      <div className="relative mx-auto max-w-7xl space-y-6 md:space-y-8">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">¡Hola, {user?.name}!</h1>
-            <p className="text-sm md:text-base text-slate-400">Aquí está tu resumen financiero personalizado</p>
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+              <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+              Resumen financiero inteligente
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+              ¡Hola, {user?.name}!
+            </h1>
+            <p className="text-sm text-zinc-400 md:text-base">
+              Aquí está tu panel financiero personalizado.
+            </p>
           </div>
           <Button
             onClick={() => (window.location.href = "/edit-profile")}
-            variant="outline"
-            className="border-slate-600 text-slate-300 hover:bg-slate-700 w-full md:w-auto"
+            className="rounded-xl border border-white/15 bg-white/5 text-zinc-100 hover:bg-white/10"
           >
-            Editar Perfil
+            Editar perfil
           </Button>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon;
             return (
-              <Card key={index} className="bg-slate-800 border-slate-700">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-300">{kpi.title}</CardTitle>
-                  <div className={`${kpi.bgColor} p-2 rounded-lg`}>
-                    <Icon className={`w-4 h-4 ${kpi.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">{kpi.value}</div>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={kpi.title}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: index * 0.06 }}
+              >
+                <Card className="overflow-hidden border-white/10 bg-white/[0.04] backdrop-blur-xl">
+                  <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+                    <div
+                      className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${kpi.ring}`}
+                    />
+                    <CardTitle className="relative text-sm font-medium text-zinc-300">
+                      {kpi.title}
+                    </CardTitle>
+                    <div className="relative rounded-lg border border-white/10 bg-black/20 p-2">
+                      <Icon className={`h-4 w-4 ${kpi.color}`} />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-semibold text-white">
+                      {kpi.value}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
 
-        {/* Charts Section */}
         {budget && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            {/* Pie Chart */}
-            <Card className="bg-slate-800 border-slate-700">
+          <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
+            <Card className="border-white/10 bg-white/[0.04] backdrop-blur-xl">
               <CardHeader>
-                <CardTitle className="text-white">Distribución de Presupuesto</CardTitle>
-                <CardDescription className="text-slate-400">Modelo 50/30/20 adaptado</CardDescription>
+                <CardTitle className="text-white">
+                  Distribución de Presupuesto
+                </CardTitle>
+                <CardDescription className="text-zinc-400">
+                  Modelo 50/30/20 adaptado
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={320}>
                   <PieChart>
                     <Pie
                       data={budgetData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
+                      label={({ name, value }) =>
+                        `${name}: ${value.toFixed(1)}%`
+                      }
+                      outerRadius={102}
+                      innerRadius={66}
                       dataKey="value"
                     >
                       {budgetData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.color}
+                          stroke="rgba(255,255,255,0.12)"
+                          strokeWidth={1.5}
+                        />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => `${typeof value === 'number' ? value.toFixed(1) : value}%`} />
+                    <Tooltip
+                      formatter={value =>
+                        `${typeof value === "number" ? value.toFixed(1) : value}%`
+                      }
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
 
-            {/* Budget Details */}
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className="border-white/10 bg-white/[0.04] backdrop-blur-xl">
               <CardHeader>
-                <CardTitle className="text-white">Detalles del Presupuesto</CardTitle>
+                <CardTitle className="text-white">
+                  Detalles del Presupuesto
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-5">
                 {[
-                  { label: "Gastos Fijos", percentage: budget.fixedExpensesPercentage, amount: budget.fixedExpensesAmount, color: "bg-red-500" },
-                  { label: "Gastos Variables", percentage: budget.variableExpensesPercentage, amount: budget.variableExpensesAmount, color: "bg-orange-500" },
-                  { label: "Ahorro", percentage: budget.savingsPercentage, amount: budget.savingsAmount, color: "bg-blue-500" },
-                  { label: "Inversión", percentage: budget.investmentPercentage, amount: budget.investmentAmount, color: "bg-green-500" },
-                  { label: "Pago de Deudas", percentage: budget.debtPaymentPercentage, amount: budget.debtPaymentAmount, color: "bg-purple-500" },
-                ].map((item, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-300">{item.label}</span>
-                      <span className="text-white font-semibold">
-                        ${parseFloat(item.amount as unknown as string).toFixed(2)} ({parseFloat(item.percentage as unknown as string).toFixed(1)}%)
+                  {
+                    label: "Gastos Fijos",
+                    percentage: budget.fixedExpensesPercentage,
+                    amount: budget.fixedExpensesAmount,
+                    barColor: "bg-rose-500",
+                  },
+                  {
+                    label: "Gastos Variables",
+                    percentage: budget.variableExpensesPercentage,
+                    amount: budget.variableExpensesAmount,
+                    barColor: "bg-orange-500",
+                  },
+                  {
+                    label: "Ahorro",
+                    percentage: budget.savingsPercentage,
+                    amount: budget.savingsAmount,
+                    barColor: "bg-blue-500",
+                  },
+                  {
+                    label: "Inversión",
+                    percentage: budget.investmentPercentage,
+                    amount: budget.investmentAmount,
+                    barColor: "bg-emerald-500",
+                  },
+                  {
+                    label: "Pago de Deudas",
+                    percentage: budget.debtPaymentPercentage,
+                    amount: budget.debtPaymentAmount,
+                    barColor: "bg-violet-500",
+                  },
+                ].map(item => (
+                  <div key={item.label} className="space-y-2.5">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-zinc-300">{item.label}</span>
+                      <span className="font-semibold text-white">
+                        $
+                        {parseFloat(item.amount as unknown as string).toFixed(
+                          2
+                        )}{" "}
+                        (
+                        {parseFloat(
+                          item.percentage as unknown as string
+                        ).toFixed(1)}
+                        %)
                       </span>
                     </div>
-                    <Progress
-                      value={parseFloat(item.percentage as unknown as string)}
-                      className="h-2"
-                    />
+                    <div className="relative">
+                      <Progress
+                        value={parseFloat(item.percentage as unknown as string)}
+                        className="h-2.5 bg-white/10"
+                      />
+                      <div
+                        className={`pointer-events-none absolute inset-y-0 left-0 rounded-full ${item.barColor} opacity-15`}
+                        style={{
+                          width: `${parseFloat(item.percentage as unknown as string)}%`,
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
               </CardContent>
@@ -234,42 +333,57 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Financial Plan */}
         {planQuery.data && (
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <CardHeader>
-              <CardTitle className="text-white">Tu Plan Financiero Personalizado</CardTitle>
+              <CardTitle className="text-white">
+                Tu Plan Financiero Personalizado
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold text-green-400 mb-2">Situación Actual</h3>
-                <p className="text-slate-300">{planQuery.data.currentSituation}</p>
+            <CardContent className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
+                <h3 className="text-base font-semibold text-emerald-300">
+                  Situación Actual
+                </h3>
+                <p className="text-sm leading-relaxed text-zinc-300">
+                  {planQuery.data.currentSituation}
+                </p>
               </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-orange-400 mb-2">Problemas Identificados</h3>
-                <p className="text-slate-300 whitespace-pre-wrap">{planQuery.data.problemsIdentified}</p>
+              <div className="space-y-2 rounded-xl border border-rose-400/20 bg-rose-500/5 p-4">
+                <h3 className="text-base font-semibold text-rose-300">
+                  Problemas Identificados
+                </h3>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+                  {planQuery.data.problemsIdentified}
+                </p>
               </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-blue-400 mb-2">Recomendaciones</h3>
-                <p className="text-slate-300 whitespace-pre-wrap">{planQuery.data.recommendations}</p>
+              <div className="space-y-2 rounded-xl border border-blue-400/20 bg-blue-500/5 p-4">
+                <h3 className="text-base font-semibold text-blue-300">
+                  Recomendaciones
+                </h3>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+                  {planQuery.data.recommendations}
+                </p>
               </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-purple-400 mb-2">Plan de Acción</h3>
-                <p className="text-slate-300 whitespace-pre-wrap">{planQuery.data.actionPlan}</p>
+              <div className="space-y-2 rounded-xl border border-violet-400/20 bg-violet-500/5 p-4">
+                <h3 className="text-base font-semibold text-violet-300">
+                  Plan de Acción
+                </h3>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+                  {planQuery.data.actionPlan}
+                </p>
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Generate Plan Button */}
         {!planQuery.data && (
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <CardHeader>
-              <CardTitle className="text-white">Genera tu Plan Financiero</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-white">
+                Genera tu Plan Financiero
+              </CardTitle>
+              <CardDescription className="text-zinc-400">
                 Recibe un análisis personalizado con recomendaciones de IA
               </CardDescription>
             </CardHeader>
@@ -277,9 +391,11 @@ export default function Dashboard() {
               <Button
                 onClick={() => generatePlanMutation.mutate()}
                 disabled={generatePlanMutation.isPending}
-                className="bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
+                className="rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50"
               >
-                {generatePlanMutation.isPending ? "Generando..." : "Generar Plan Ahora"}
+                {generatePlanMutation.isPending
+                  ? "Generando..."
+                  : "Generar Plan Ahora"}
               </Button>
             </CardContent>
           </Card>
