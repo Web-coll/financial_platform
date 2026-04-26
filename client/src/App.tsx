@@ -1,54 +1,14 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
-import Education from "./pages/Education";
-import InvestmentSimulator from "./pages/InvestmentSimulator";
-import Chat from "./pages/Chat";
-import EditProfile from "./pages/EditProfile";
-
-function Router() {
-  // make sure to consider if you need authentication for certain routes
+export default function App() {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/onboarding"} component={Onboarding} />
-      <Route path={"/dashboard"} component={Dashboard} />
-      <Route path={"/education"} component={Education} />
-      <Route path={"/simulator"} component={InvestmentSimulator} />
-      <Route path={"/chat"} component={Chat} />
-      <Route path={"/edit-profile"} component={EditProfile} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <div style={{ fontFamily: "system-ui, sans-serif", padding: "2rem" }}>
+      <h1>Modo HTML único activo</h1>
+      <p>
+        Esta implementación fue movida a <code>client/index.html</code> para
+        ejecutarse sin login y sin backend.
+      </p>
+      <p>
+        Abre directamente <code>client/index.html</code> en el navegador.
+      </p>
+    </div>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-}
-
-export default App;

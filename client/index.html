@@ -1,26 +1,251 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>FinPlan - Plataforma de Organización Financiera e Inversión</title>    
-    <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    THIS IS THE END OF A COMMENT BLOCK, BLOCK TO BE DELETED -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinPlan - Demo HTML Único</title>
+    <style>
+      :root {
+        --bg: #070b11;
+        --card: rgba(255, 255, 255, 0.05);
+        --muted: #9ca3af;
+        --text: #f8fafc;
+        --green: #10b981;
+        --blue: #3b82f6;
+        --red: #ef4444;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 20% -20%, rgba(16,185,129,.2), transparent 40%),
+          radial-gradient(circle at 80% 0%, rgba(59,130,246,.2), transparent 35%), var(--bg);
+      }
+      .container { max-width: 1120px; margin: 0 auto; padding: 1rem; }
+      .nav { position: sticky; top: 0; background: rgba(7, 11, 17, 0.75); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,.1); z-index: 20; }
+      .nav-row { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; }
+      .brand { font-weight: 700; font-size: 1.1rem; }
+      .actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+      button, input, select, textarea {
+        border-radius: 12px; border: 1px solid rgba(255,255,255,.15);
+        background: rgba(255,255,255,.06); color: var(--text); padding: .65rem .8rem;
+      }
+      button { cursor: pointer; transition: .2s; }
+      button:hover { transform: translateY(-1px); border-color: rgba(16,185,129,.6); }
+      .primary { background: linear-gradient(90deg, #10b981, #059669); border: none; }
+      .page { display: none; animation: fade .25s ease; }
+      .page.active { display: block; }
+      @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity:1; transform:none; } }
+      .grid { display: grid; gap: 1rem; }
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+      .card { background: var(--card); border: 1px solid rgba(255,255,255,.1); border-radius: 18px; padding: 1rem; backdrop-filter: blur(8px); }
+      .muted { color: var(--muted); }
+      h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: .2rem 0 .8rem; }
+      h2 { margin: .2rem 0 .8rem; }
+      .kpi { font-size: 1.8rem; font-weight: 700; }
+      .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+      .bar > i { display:block; height:100%; background: linear-gradient(90deg, #10b981, #3b82f6); }
+      .chat-box { min-height: 300px; max-height: 380px; overflow: auto; display: flex; flex-direction: column; gap: .6rem; }
+      .msg { padding: .6rem .8rem; border-radius: 12px; max-width: 80%; }
+      .msg.user { align-self: flex-end; background: #10b981; }
+      .msg.bot { align-self: flex-start; background: rgba(255,255,255,.08); }
+      .hidden { display: none; }
+      label { font-size: .9rem; color: #d1d5db; display:block; margin-bottom: .35rem; }
+      .section-title { margin-top: 1rem; margin-bottom: .5rem; font-weight: 600; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: .5rem; border-bottom: 1px solid rgba(255,255,255,.12); text-align: left; }
+    </style>
   </head>
-
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  </body>
+    <nav class="nav">
+      <div class="container nav-row">
+        <div class="brand">FinPlan · Demo sin Login</div>
+        <div class="actions">
+          <button data-nav="home">Inicio</button>
+          <button data-nav="dashboard">Dashboard</button>
+          <button data-nav="education">Educación</button>
+          <button data-nav="simulator">Simulador</button>
+          <button data-nav="chat">Chat IA</button>
+          <button data-nav="profile">Perfil</button>
+        </div>
+      </div>
+    </nav>
 
+    <main class="container">
+      <section id="home" class="page active">
+        <h1>Controla tu dinero con claridad</h1>
+        <p class="muted">Versión de archivo único HTML (sin backend ni login). Todo corre localmente.</p>
+        <div class="grid grid-3" style="margin-top:1rem">
+          <div class="card"><div class="kpi" style="color:var(--green)">50/30/20</div><p class="muted">Presupuesto recomendado</p></div>
+          <div class="card"><div class="kpi" style="color:var(--blue)">100%</div><p class="muted">Modo demo funcional</p></div>
+          <div class="card"><div class="kpi" style="color:var(--red)">0</div><p class="muted">Bloqueos por login</p></div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="page">
+        <h2>Dashboard</h2>
+        <p class="muted">Resumen financiero con datos guardados localmente.</p>
+        <div class="grid grid-3">
+          <div class="card"><div class="muted">Ingreso Mensual</div><div class="kpi" id="kpi-income">$0</div></div>
+          <div class="card"><div class="muted">Ahorros Actuales</div><div class="kpi" id="kpi-savings">$0</div></div>
+          <div class="card"><div class="muted">Deudas</div><div class="kpi" id="kpi-debts">$0</div></div>
+        </div>
+        <div class="card" style="margin-top:1rem">
+          <h3>Distribución sugerida</h3>
+          <p class="muted">Gastos 50% · Ahorro 20% · Inversión 30%</p>
+          <div class="section-title">Gastos fijos/variables</div><div class="bar"><i style="width:50%"></i></div>
+          <div class="section-title">Ahorro</div><div class="bar"><i style="width:20%"></i></div>
+          <div class="section-title">Inversión</div><div class="bar"><i style="width:30%"></i></div>
+        </div>
+      </section>
+
+      <section id="education" class="page">
+        <h2>Educación Financiera</h2>
+        <div class="grid grid-2">
+          <article class="card"><h3>Acciones</h3><p class="muted">Partes de una empresa. Potencial alto y riesgo variable.</p></article>
+          <article class="card"><h3>ETFs</h3><p class="muted">Fondos diversificados, ideales para empezar con menos riesgo.</p></article>
+          <article class="card"><h3>Interés compuesto</h3><p class="muted">Tus ganancias generan más ganancias con el tiempo.</p></article>
+          <article class="card"><h3>Estrategia</h3><p class="muted">Consistencia + largo plazo + diversificación.</p></article>
+        </div>
+      </section>
+
+      <section id="simulator" class="page">
+        <h2>Simulador de inversión</h2>
+        <div class="card">
+          <div class="grid grid-3">
+            <div><label>Inversión mensual ($)</label><input id="sim-monthly" type="number" value="500" /></div>
+            <div><label>Retorno anual (%)</label><input id="sim-return" type="number" value="7" /></div>
+            <div><label>Años</label><input id="sim-years" type="number" value="10" /></div>
+          </div>
+          <button id="sim-btn" class="primary" style="margin-top:.8rem">Calcular</button>
+          <div class="grid grid-3" style="margin-top:1rem">
+            <div class="card"><div class="muted">Invertido</div><div class="kpi" id="sim-invested">$0</div></div>
+            <div class="card"><div class="muted">Ganancia</div><div class="kpi" id="sim-earnings">$0</div></div>
+            <div class="card"><div class="muted">Total final</div><div class="kpi" id="sim-total">$0</div></div>
+          </div>
+          <div style="margin-top:1rem; overflow:auto">
+            <table>
+              <thead><tr><th>Año</th><th>Invertido</th><th>Ganancia</th><th>Total</th></tr></thead>
+              <tbody id="sim-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="chat" class="page">
+        <h2>Chat IA (demo)</h2>
+        <div class="card">
+          <div id="chat-box" class="chat-box">
+            <div class="msg bot">Hola 👋 Soy tu asistente demo. Pregúntame sobre ahorro o inversión.</div>
+          </div>
+          <div style="display:flex; gap:.5rem; margin-top:.6rem">
+            <input id="chat-input" placeholder="Escribe tu pregunta..." style="flex:1" />
+            <button id="chat-send" class="primary">Enviar</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="page">
+        <h2>Perfil financiero</h2>
+        <form id="profile-form" class="card">
+          <div class="grid grid-2">
+            <div><label>Nombre</label><input id="p-name" value="Invitado" /></div>
+            <div><label>Ingreso mensual ($)</label><input id="p-income" type="number" value="3500" /></div>
+            <div><label>Ahorros actuales ($)</label><input id="p-savings" type="number" value="800" /></div>
+            <div><label>Deudas ($)</label><input id="p-debts" type="number" value="500" /></div>
+          </div>
+          <button class="primary" type="submit" style="margin-top:1rem">Guardar perfil</button>
+          <p class="muted">Se guarda en LocalStorage del navegador.</p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const pages = [...document.querySelectorAll('.page')];
+      document.querySelectorAll('[data-nav]').forEach(btn => btn.onclick = () => {
+        const id = btn.dataset.nav;
+        pages.forEach(p => p.classList.toggle('active', p.id === id));
+      });
+
+      const KEY = 'finplan_demo_profile';
+      const defaultProfile = { name: 'Invitado', income: 3500, savings: 800, debts: 500 };
+      const $ = (id) => document.getElementById(id);
+
+      function loadProfile() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || defaultProfile; }
+        catch { return defaultProfile; }
+      }
+      function saveProfile(profile) {
+        localStorage.setItem(KEY, JSON.stringify(profile));
+        renderDashboard(profile);
+      }
+      function renderDashboard(p) {
+        $('kpi-income').textContent = `$${Number(p.income).toLocaleString()}`;
+        $('kpi-savings').textContent = `$${Number(p.savings).toLocaleString()}`;
+        $('kpi-debts').textContent = `$${Number(p.debts).toLocaleString()}`;
+      }
+      const profile = loadProfile();
+      $('p-name').value = profile.name;
+      $('p-income').value = profile.income;
+      $('p-savings').value = profile.savings;
+      $('p-debts').value = profile.debts;
+      renderDashboard(profile);
+
+      $('profile-form').onsubmit = (e) => {
+        e.preventDefault();
+        saveProfile({
+          name: $('p-name').value || 'Invitado',
+          income: Number($('p-income').value || 0),
+          savings: Number($('p-savings').value || 0),
+          debts: Number($('p-debts').value || 0),
+        });
+        alert('Perfil guardado ✅');
+      };
+
+      $('sim-btn').onclick = () => {
+        const monthly = Number($('sim-monthly').value || 0);
+        const annual = Number($('sim-return').value || 0) / 100;
+        const years = Number($('sim-years').value || 0);
+        let total = 0, invested = 0;
+        const rows = [];
+        for (let y = 1; y <= years; y++) {
+          for (let m = 0; m < 12; m++) {
+            total = total * (1 + annual / 12) + monthly;
+            invested += monthly;
+          }
+          rows.push({ year: y, invested, total, earnings: total - invested });
+        }
+        const final = rows[rows.length - 1] || { invested: 0, total: 0, earnings: 0 };
+        $('sim-invested').textContent = `$${Math.round(final.invested).toLocaleString()}`;
+        $('sim-earnings').textContent = `$${Math.round(final.earnings).toLocaleString()}`;
+        $('sim-total').textContent = `$${Math.round(final.total).toLocaleString()}`;
+        $('sim-table').innerHTML = rows.map(r =>
+          `<tr><td>${r.year}</td><td>$${Math.round(r.invested).toLocaleString()}</td><td>$${Math.round(r.earnings).toLocaleString()}</td><td>$${Math.round(r.total).toLocaleString()}</td></tr>`
+        ).join('');
+      };
+
+      function replyTo(text) {
+        const q = text.toLowerCase();
+        if (q.includes('ahorro')) return 'Tip: separa al menos 20% de tu ingreso y automatízalo cada mes.';
+        if (q.includes('deuda')) return 'Prioriza deudas de mayor interés y mantén un fondo de emergencia.';
+        if (q.includes('invert')) return 'Empieza con ETFs diversificados y horizonte de largo plazo.';
+        return 'Te recomiendo revisar tu Dashboard y el Simulador para decisiones más claras.';
+      }
+      $('chat-send').onclick = () => {
+        const input = $('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        $('chat-box').insertAdjacentHTML('beforeend', `<div class="msg user"></div>`);
+        $('chat-box').lastElementChild.textContent = text;
+        setTimeout(() => {
+          $('chat-box').insertAdjacentHTML('beforeend', `<div class="msg bot"></div>`);
+          $('chat-box').lastElementChild.textContent = replyTo(text);
+          $('chat-box').scrollTop = $('chat-box').scrollHeight;
+        }, 250);
+        input.value = '';
+      };
+    </script>
+  </body>
 </html>
