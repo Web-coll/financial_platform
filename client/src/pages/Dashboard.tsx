@@ -134,9 +134,18 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white">¡Hola, {user?.name}!</h1>
-          <p className="text-slate-400">Aquí está tu resumen financiero personalizado</p>
+        <div className="flex justify-between items-start">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-white">¡Hola, {user?.name}!</h1>
+            <p className="text-slate-400">Aquí está tu resumen financiero personalizado</p>
+          </div>
+          <Button
+            onClick={() => (window.location.href = "/edit-profile")}
+            variant="outline"
+            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+          >
+            Editar Perfil
+          </Button>
         </div>
 
         {/* KPI Cards */}

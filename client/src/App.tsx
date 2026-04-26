@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Education from "./pages/Education";
 import InvestmentSimulator from "./pages/InvestmentSimulator";
 import Chat from "./pages/Chat";
+import EditProfile from "./pages/EditProfile";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -21,6 +22,7 @@ function Router() {
       <Route path={"/education"} component={Education} />
       <Route path={"/simulator"} component={InvestmentSimulator} />
       <Route path={"/chat"} component={Chat} />
+      <Route path={"/edit-profile"} component={EditProfile} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
