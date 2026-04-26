@@ -1,6 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { getLoginUrl } from "@/const";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -83,32 +82,23 @@ export default function Home() {
             <span className="text-lg font-semibold tracking-wide">FinPlan</span>
           </div>
 
-          {isAuthenticated ? (
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => (window.location.href = "/dashboard")}
-                className="rounded-xl bg-white/10 hover:bg-white/20"
-              >
-                Dashboard
-              </Button>
-              <Button
-                onClick={() => (window.location.href = "/education")}
-                className="rounded-xl bg-white/10 hover:bg-white/20"
-              >
-                Educación
-              </Button>
-              <span className="hidden text-sm text-zinc-300 md:block">
-                Hola, {user?.name}
-              </span>
-            </div>
-          ) : (
+          <div className="flex items-center gap-3">
             <Button
-              onClick={() => (window.location.href = getLoginUrl())}
-              className="rounded-xl bg-emerald-500 hover:bg-emerald-400"
+              onClick={() => (window.location.href = "/dashboard")}
+              className="rounded-xl bg-white/10 hover:bg-white/20"
             >
-              Iniciar sesión
+              Dashboard
             </Button>
-          )}
+            <Button
+              onClick={() => (window.location.href = "/education")}
+              className="rounded-xl bg-white/10 hover:bg-white/20"
+            >
+              Educación
+            </Button>
+            <span className="hidden text-sm text-zinc-300 md:block">
+              Modo demo: {user?.name}
+            </span>
+          </div>
         </div>
       </nav>
 
@@ -134,30 +124,19 @@ export default function Home() {
               dinámico, foco en metas y seguimiento visual en tiempo real.
             </p>
             <div className="flex flex-wrap gap-4">
-              {!isAuthenticated ? (
-                <>
-                  <Button
-                    onClick={() => (window.location.href = getLoginUrl())}
-                    className="group h-12 rounded-xl bg-emerald-500 px-7 text-base hover:bg-emerald-400"
-                  >
-                    Comenzar gratis
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                  <Button
-                    onClick={() => (window.location.href = "/education")}
-                    className="h-12 rounded-xl border border-white/15 bg-white/5 px-7 text-base hover:bg-white/10"
-                  >
-                    Ver demo
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => (window.location.href = "/dashboard")}
-                  className="h-12 rounded-xl bg-emerald-500 px-7 text-base hover:bg-emerald-400"
-                >
-                  Ir a tu dashboard
-                </Button>
-              )}
+              <Button
+                onClick={() => (window.location.href = "/dashboard")}
+                className="group h-12 rounded-xl bg-emerald-500 px-7 text-base hover:bg-emerald-400"
+              >
+                Ir al dashboard
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <Button
+                onClick={() => (window.location.href = "/education")}
+                className="h-12 rounded-xl border border-white/15 bg-white/5 px-7 text-base hover:bg-white/10"
+              >
+                Educación
+              </Button>
             </div>
           </motion.div>
 
